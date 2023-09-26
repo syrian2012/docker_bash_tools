@@ -2,9 +2,9 @@
 add more tools to your bash make docker easier and faster
 
 # how it works
-simply edit your .bashrc file inside your home directory and add the following inside it under alias ll='ls -l' siction
+simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it under alias ll='ls -l' siction
 
-her what you should add
+her what it should function
 
 # List running containers
 alias dps='docker ps | less'
@@ -23,8 +23,6 @@ alias ddwon='docker compose down'
 
 # build docker image from dockerfile
 alias db='docker build .'
-
-#!/bin/bash
 
 # Get container id of exiting container
 dgrep(){
