@@ -2,9 +2,14 @@
 add more tools to your bash make docker easier and faster
 
 # how it works
-simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it under alias ll='ls -l' siction
+simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it or simply run the follwing it will do the job for you:
+cat code_in_bashrc >> ~/.bashrc
 
-her what it should function
+to take function you need to logout and login again or start a new shell
+
+don't forget to add your user as a docker admin to avoid problems with running the tools
+
+her what should it function
 
 # List running containers
 alias dps='docker ps | less'
