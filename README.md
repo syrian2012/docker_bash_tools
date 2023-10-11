@@ -81,21 +81,19 @@ dlog(){
 
 #clear the logs for specifc container
 dlogc(){
-    # Get the container ID using a name or partial name
+    # Get the container ID using a name or partial name<br>
     local container_id=$(docker ps -qf "name=$1")
     if [ -z "$container_id" ]; then
         echo "Container not found"
         return 1
     fi
-
-    # Get the log file path of the container
+    # Get the log file path of the container<br>
     local log_path=$(docker inspect --format='{{.LogPath}}' "$container_id")
     if [ -z "$log_path" ]; then
         echo "Log path not found"
         return 1
     fi
-
-    # Clear the log file
+    # Clear the log file<br>
     echo -n > "$log_path"
     echo "Logs cleared for container $1"
 }
