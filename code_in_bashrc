@@ -11,7 +11,7 @@ alias dimgs='docker images'
 alias dup='docker compose up -d'
 
 # Use composer to stop and delete container/s
-alias ddwon='docker compose down'
+alias ddown='docker compose down'
 
 # build docker image from dockerfile
 alias db='docker build .'
