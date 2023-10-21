@@ -88,3 +88,8 @@ dlogc(){
     echo -n > "$log_path"
     echo "Logs cleared for container $1"
 }
+
+# Inspect container
+dinspect(){
+    docker inspect $(dgrep "$1")
+}
