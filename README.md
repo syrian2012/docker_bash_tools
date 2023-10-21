@@ -98,6 +98,11 @@ dlogc(){
     echo "Logs cleared for container $1"
 }
 
+# Inspect container
+dinspect(){
+    docker inspect $(dgrep "$1")
+}
+
 after that logout and login again to your shell and all of the above will be functional
 
 enjoy
