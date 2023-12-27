@@ -1,4 +1,4 @@
-# Get container id and of exiting containers
+# Get container id and name of exiting containers
 dgrep() {
     local container_name="$1"
 
