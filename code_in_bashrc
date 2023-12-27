@@ -1,71 +1,362 @@
-# List running containers
-alias dps='docker ps | less'
+# Get container id and of exiting containers
+dgrep() {
+    local container_name="$1"
 
-# Remove docker image/s
-alias drmi='docker rmi'
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
 
-# List docker images
-alias dimgs='docker images'
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
 
-# Use composer to create container/s
-alias dup='docker compose up -d'
-
-# Use composer to stop and delete container/s
-alias ddown='docker compose down'
-
-# build docker image from dockerfile
-alias db='docker build .'
-
-#!/bin/bash
-
-# Get container id of exiting container
-dgrep(){
-    docker ps -a | grep "$1" | cut -c1-12 | head -n 1 
+    # Display the list of matching container names and IDs
+    echo "Matching containers for name '$container_name':"
+    echo "$container_info"
 }
 
 # bash into an existing container
 dbash() {
-    docker exec -ti $(dgrep "$1") /bin/bash
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker exec -ti "$selected_container_name" /bin/bash
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # sh into an existing container
 dsh() {
-    docker exec -ti $(dgrep "$1") /bin/sh
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker exec -ti "$selected_container_name" /bin/sh
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Execute something in an existing container
 dex() {
-    docker exec -ti $(dgrep "$1") $2
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker exec -ti "$selected_container_name" $2
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Start an existing container
 dstart(){
-    docker start $(dgrep "$1")
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker start "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
-# Restart an existing container
+# Start an existing container
 drestart(){
-    docker restart $(dgrep "$1")
+        local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker restart "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Stop an existing container
 dstop(){
-    docker stop $(dgrep "$1")
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker stop "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Remove an existing container
 drm(){
-    docker rm $(dgrep "$1")
+        local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker rm "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Stop and remove an existing container
 dsrm(){
-    dstop $(dgrep "$1") && drm $(dgrep "$1")
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker stop "$selected_container_name"
+        docker rm "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 # Get logs of an existing container
 dlog(){
-    docker logs $(dgrep "$1")
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker logs "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
 
 #clear the logs for specifc container
@@ -91,5 +382,38 @@ dlogc(){
 
 # Inspect container
 dinspect(){
-    docker inspect $(dgrep "$1")
+    local container_name="$1"
+
+    # Get a list of matching container names and IDs
+    local container_info=$(docker ps -a --filter "name=$container_name" --format "{{.Names}}:{{.ID}}")
+
+    # Check if there are no matching containers
+    if [ -z "$container_info" ]; then
+        echo "No matching containers found for name '$container_name'."
+        return 1
+    fi
+
+    # Create an array from the container names and IDs
+    local container_array=($(echo "$container_info" | tr ':' ' '))
+
+    # Display a list of matching container names for user selection
+    echo "Matching containers for name '$container_name':"
+    for ((i=0; i<${#container_array[@]}; i+=2)); do
+        echo "$((i/2 + 1)). ${container_array[i]}"
+    done
+
+    # Prompt the user to choose a container
+    read -p "Enter the number of the container you want: " selection
+
+    # Validate the user's input
+    if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
+        local selected_container_name="${container_array[(selection-1)*2]}"
+        echo "Running command on selected container: $selected_container_name"
+        
+        # Run the command on the selected container
+        docker inspect "$selected_container_name"
+    else
+        echo "Invalid selection. Please enter a valid number."
+        return 1
+    fi
 }
