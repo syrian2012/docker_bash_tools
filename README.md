@@ -1,5 +1,6 @@
 # docker_bash_tools
-add more tools to your bash make docker easier and faster
+add more tools to your bash make docker easier and faster.
+In version 2, you can now select from multiple containers that share the same characters in their names.
 
 # how it works
 simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it or simply run the follwing it will do the job for you:<br>
@@ -11,97 +12,59 @@ don't forget to add your user as a docker admin to avoid problems with running t
 
 her what should it function
 
-# List running containers
-alias dps='docker ps | less'
+# dps:
+List running containers
 
-# Remove docker image/s
-alias drmi='docker rmi'
+# drmi:
+Remove docker image/s
 
-# List docker images
-alias dimgs='docker images'
+# dimgs:
+List docker images
 
-# Use composer to create container/s
-alias dup='docker compose up -d'
+# dup:
+Use composer to create container/s = 'docker compose up -d'
 
-# Use composer to stop and delete container/s
-alias ddown='docker compose down'
+# ddown:
+Use composer to stop and delete container/s = 'docker compose down'
 
-# build docker image from dockerfile
-alias db='docker build .'
+# db:
+build docker image from dockerfile = 'docker build .'
 
-# Get container id of exiting container
-dgrep(){
-    docker ps -a | grep "$1" | cut -c1-12 | head -n 1 
-}
+# dgrep:
+Get container id and name of exiting containers
 
-# bash into an existing container
-dbash() {
-    docker exec -ti $(dgrep "$1") /bin/bash
-}
+# dbash container_name:
+bash into container
 
-# sh into an existing container
-dsh() {
-    docker exec -ti $(dgrep "$1") /bin/sh
-}
+# sh container_name:
+sh into container
 
-# Execute something in an existing container
-dex() {
-    docker exec -ti $(dgrep "$1") $2
-}
+# dex container_name:
+Execute something in container
 
-# Start an existing container
-dstart(){
-    docker start $(dgrep "$1")
-}
+# dstart container_name:
+Start container
 
-# Restart an existing container
-drestart(){
-    docker restart $(dgrep "$1")
-}
+# drestart container_name:
+Restart container
 
-# Stop an existing container
-dstop(){
-    docker stop $(dgrep "$1")
-}
+# dstop container_name:
+Stop container
 
-# Remove an existing container
-drm(){
-    docker rm $(dgrep "$1")
-}
+# drm container_name:
+Remove container
 
-# Stop and remove an existing container
-dsrm(){
-    dstop $(dgrep "$1") && drm $(dgrep "$1")
-}
+# dsrm container_name:
+Stop and remove container
 
-# Get logs of an existing container
-dlog(){
-    docker logs $(dgrep "$1")
-}
+# dlog container_name:
+Get logs of container
 
-#clear the logs for specifc container
-dlogc(){
-    # Get the container ID using a name or partial name<br>
-    local container_id=$(docker ps -qf "name=$1")
-    if [ -z "$container_id" ]; then
-        echo "Container not found"
-        return 1
-    fi
-    # Get the log file path of the container<br>
-    local log_path=$(docker inspect --format='{{.LogPath}}' "$container_id")
-    if [ -z "$log_path" ]; then
-        echo "Log path not found"
-        return 1
-    fi
-    # Clear the log file<br>
-    echo -n > "$log_path"
-    echo "Logs cleared for container $1"
-}
+# dlogc container_name:
+Clear the logs of container
 
-# Inspect container
-dinspect(){
-    docker inspect $(dgrep "$1")
-}
+# dinspect container_name:
+Inspect container
 
 after that logout and login again to your shell and all of the above will be functional
 
