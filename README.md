@@ -30,8 +30,11 @@ Use composer to stop and delete container/s = 'docker compose down'
 # db:
 build docker image from dockerfile = 'docker build .'
 
-# dgrep:
-Get container id and name of exiting containers
+# dinfo container_name:
+Get container information
+
+# dgrep container_name:
+Get all matching containers information
 
 # dbash container_name:
 bash into container
