@@ -15,14 +15,16 @@ dinfo(){
     # Create an array from the container names and IDs
     local container_array=($(echo "$container_info" | tr ':' ' '))
 
-    # Check if there is only one matching container
-    if [ ${#container_array[@]} -eq 2 ]; then
-        local selected_container_name="${container_array[0]}"
-        local selected_container_id="${container_array[1]}"
+    # Function to fetch and display container info
+    fetch_container_info() {
+        local selected_container_name="$1"
+        local selected_container_id="$2"
+
         echo "Fetching state for selected container: $selected_container_name"
+
         local started_at=$(docker inspect --format='{{.State.StartedAt}}' "$selected_container_name")
         local created_at=$(docker inspect --format='{{.Created}}' "$selected_container_name")
-        
+
         # Calculate uptime
         local current_time=$(date +%s)
         local started_at_seconds=$(date -d "$started_at" +%s)
@@ -32,6 +34,12 @@ dinfo(){
         local created_at_seconds=$(date -d "$created_at" +%s)
         local creation_duration=$((current_time - created_at_seconds))
 
+        # Get container IP address
+        local ip_address=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$selected_container_name")
+        
+        # Get container ports
+        local ports=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{if $conf}}{{$p}} -> {{(index $conf 0).HostIp}}:{{(index $conf 0).HostPort}};{{else}}{{$p}} -> N/A;{{end}}{{end}}' "$selected_container_name" | sed 's/;$//')
+
         echo "Name: $selected_container_name"
         echo "ID: $selected_container_id"
         echo "State: $(docker inspect --format='{{.State.Status}}' "$selected_container_name")"
@@ -39,6 +47,13 @@ dinfo(){
         echo "Up Duration: $(printf '%02dh:%02dm:%02ds' $((uptime/3600)) $((uptime%3600/60)) $((uptime%60)))"
         echo "Created From: $(date -d "@$created_at_seconds" '+%Y-%m-%d %H:%M:%S %Z')"
         echo "Creation Duration: $(printf '%02dh:%02dm:%02ds' $((creation_duration/3600)) $((creation_duration%3600/60)) $((creation_duration%60)))"
+        echo "IP Address: $ip_address"
+        echo "Ports: $ports"
+    }
+
+    # Check if there is only one matching container
+    if [ ${#container_array[@]} -eq 2 ]; then
+        fetch_container_info "${container_array[0]}" "${container_array[1]}"
     else
         # Display a list of matching container names for user selection
         echo "Matching containers for name '$container_name':"
@@ -51,36 +66,14 @@ dinfo(){
 
         # Validate the user's input
         if [[ $selection =~ ^[0-9]+$ && $selection -ge 1 && $selection -le ${#container_array[@]}/2 ]]; then
-            local selected_container_name="${container_array[(selection-1)*2]}"
-            local selected_container_id="${container_array[(selection-1)*2+1]}"
-            echo "Fetching state for selected container: $selected_container_name"
-
-            # Run the command on the selected container
-            local started_at=$(docker inspect --format='{{.State.StartedAt}}' "$selected_container_name")
-            local created_at=$(docker inspect --format='{{.Created}}' "$selected_container_name")
-
-            # Calculate uptime
-            local current_time=$(date +%s)
-            local started_at_seconds=$(date -d "$started_at" +%s)
-            local uptime=$((current_time - started_at_seconds))
-
-            # Calculate creation duration
-            local created_at_seconds=$(date -d "$created_at" +%s)
-            local creation_duration=$((current_time - created_at_seconds))
-
-            echo "Name: $selected_container_name"
-            echo "ID: $selected_container_id"
-            echo "State: $(docker inspect --format='{{.State.Status}}' "$selected_container_name")"
-            echo "Up Since: $(date -d "@$started_at_seconds" '+%Y-%m-%d %H:%M:%S %Z')"
-            echo "Up Duration: $(printf '%02dh:%02dm:%02ds' $((uptime/3600)) $((uptime%3600/60)) $((uptime%60)))"
-            echo "Created From: $(date -d "@$created_at_seconds" '+%Y-%m-%d %H:%M:%S %Z')"
-            echo "Creation Duration: $(printf '%02dh:%02dm:%02ds' $((creation_duration/3600)) $((creation_duration%3600/60)) $((creation_duration%60)))"
+            fetch_container_info "${container_array[(selection-1)*2]}" "${container_array[(selection-1)*2+1]}"
         else
             echo "Invalid selection. Please enter a valid number."
             return 1
         fi
     fi
 }
+
 
 #Grep all containers with its information
 dgrep(){
