@@ -74,8 +74,7 @@ dinfo(){
     fi
 }
 
-
-#Grep all containers with its information
+# Grep all containers with their information
 dgrep(){
     local container_name="$1"
 
@@ -110,6 +109,12 @@ dgrep(){
         local created_at_seconds=$(date -d "$created_at" +%s)
         local creation_duration=$((current_time - created_at_seconds))
 
+        # Get container IP address
+        local ip_address=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$selected_container_name")
+
+        # Get container ports
+        local ports=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{if $conf}}{{$p}} -> {{(index $conf 0).HostIp}}:{{(index $conf 0).HostPort}};{{else}}{{$p}} -> N/A;{{end}}{{end}}' "$selected_container_name" | sed 's/;$//')
+
         echo "Name: $selected_container_name"
         echo "ID: $selected_container_id"
         echo "State: $(docker inspect --format='{{.State.Status}}' "$selected_container_name")"
@@ -117,6 +122,8 @@ dgrep(){
         echo "Up Duration: $(printf '%02dh:%02dm:%02ds' $((uptime/3600)) $((uptime%3600/60)) $((uptime%60)))"
         echo "Created From: $(date -d "@$created_at_seconds" '+%Y-%m-%d %H:%M:%S %Z')"
         echo "Creation Duration: $(printf '%02dh:%02dm:%02ds' $((creation_duration/3600)) $((creation_duration%3600/60)) $((creation_duration%60)))"
+        echo "IP Address: $ip_address"
+        echo "Ports: $ports"
         echo ""
     done
 }
