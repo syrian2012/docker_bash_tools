@@ -2,7 +2,7 @@
 add more tools to your bash make docker easier and faster.
 In version 2, you can now select from multiple containers that share the same characters in their names.
 
-# how it works
+## how it works
 simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it or simply run the follwing it will do the job for you:<br>
 cat code_in_bashrc >> ~/.bashrc
 
@@ -12,63 +12,66 @@ don't forget to add your user as a docker admin to avoid problems with running t
 
 her what should it function
 
-# dps:
+#### dps:
 List running containers
 
-# drmi:
+#### drmi:
 Remove docker image/s
 
-# dimgs:
+#### dimgs:
 List docker images
 
-# dup:
+#### dup:
 Use composer to create container/s = 'docker compose up -d'
 
-# ddown:
+#### ddown:
 Use composer to stop and delete container/s = 'docker compose down'
 
-# db:
+#### db:
 build docker image from dockerfile = 'docker build .'
 
-# dinfo container_name:
+#### dinfo container_name:
 Get container information
 
-# dgrep container_name:
+#### dgrep container_name:
 Get all matching containers information
 
-# dbash container_name:
+#### dbash container_name:
 bash into container
 
-# sh container_name:
+#### dsh container_name:
 sh into container
 
-# dex container_name:
+#### dex container_name:
 Execute something in container
 
-# dstart container_name:
+#### dstart container_name:
 Start container
 
-# drestart container_name:
+#### drestart container_name:
 Restart container
 
-# dstop container_name:
+#### dstop container_name:
 Stop container
 
-# drm container_name:
+#### drm container_name:
 Remove container
 
-# dsrm container_name:
+#### dsrm container_name:
 Stop and remove container
 
-# dlog container_name:
+#### dlog container_name:
 Get logs of container
 
-# dlogc container_name:
+#### dlogc container_name:
 Clear the logs of container
 
-# dinspect container_name:
+#### dinspect container_name:
 Inspect container
 
 after that logout and login again to your shell and all of the above will be functional
 
-enjoy
+## Contact
+For professional DevOps services, optimization, and consultation, contact me at mhd4.hz@gmail.com.
+
+### enjoy with Love Mohammad Haidar.
