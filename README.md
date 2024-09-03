@@ -13,22 +13,40 @@ don't forget to add your user as a docker admin to avoid problems with running t
 her what should it function
 
 #### dps:
-List running containers
+List dockers original way with less
 
 #### drmi:
-Remove docker image/s
+Delete docker image/s
 
 #### dimgs:
 List docker images
 
-#### dup:
-Use composer to create container/s = 'docker compose up -d'
-
-#### ddown:
-Use composer to stop and delete container/s = 'docker compose down'
-
 #### db:
-build docker image from dockerfile = 'docker build .'
+Build docker image
+
+#### dcup:
+Create docker compose stack
+
+#### dcdown:
+Delete docker compose stack
+
+#### dcstart:
+Start docker compose stack
+
+#### dcstop:
+Stop docker compose stack
+
+#### dcrestart:
+Restart docker compose stack
+
+#### dcps:
+List docker compose stack with less
+
+#### dcpull:
+Pull docker compose stack images
+
+#### dcbuild:
+Build docker compose stack images
 
 #### dinfo container_name:
 Get container information
