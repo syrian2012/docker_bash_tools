@@ -1,4 +1,41 @@
 
+#List dockers original way with less
+alias dps='docker ps | less'
+
+#Delete docker image
+alias drmi='docker rmi'
+
+#List docker images
+alias dimgs='docker images'
+
+#Build docker image
+alias db='docker build .'
+
+#Create compose stack
+alias dcup='docker compose up -d'
+
+#Delete compose stack
+alias dcdown='docker compose down'
+
+#Start compose stack
+alias dcstart='docker compose start'
+
+#Stop compose stack
+alias dcstop='docker compose stop'
+
+#Restart compose stack
+alias dcrestart='docker compose restart'
+
+#List compose stack with less
+alias dcps='docker compose ps | less'
+
+#Pull compose stack images
+alias dcpull='docker compose pull'
+
+#Build compose stack images
+alias dcbuild='docker compose build'
+
+
 #Get information of a container
 dinfo(){
     local container_name="$1"
