@@ -76,7 +76,7 @@ dinfo(){
         
         # Get container ports
         local ports=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{if $conf}}{{$p}} -> {{(index $conf 0).HostIp}}:{{(index $conf 0).HostPort}};{{else}}{{$p}} -> N/A;{{end}}{{end}}' "$selected_container_name" | sed 's/;$//')
-
+        {
         echo "Name: $selected_container_name"
         echo "ID: $selected_container_id"
         echo "State: $(docker inspect --format='{{.State.Status}}' "$selected_container_name")"
@@ -86,6 +86,7 @@ dinfo(){
         echo "Creation Duration: $(printf '%02dh:%02dm:%02ds' $((creation_duration/3600)) $((creation_duration%3600/60)) $((creation_duration%60)))"
         echo "IP Address: $ip_address"
         echo "Ports: $ports"
+        } | bat  --language=sh
     }
 
     # Check if there is only one matching container
@@ -151,7 +152,7 @@ dgrep(){
 
         # Get container ports
         local ports=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{if $conf}}{{$p}} -> {{(index $conf 0).HostIp}}:{{(index $conf 0).HostPort}};{{else}}{{$p}} -> N/A;{{end}}{{end}}' "$selected_container_name" | sed 's/;$//')
-
+        {
         echo "Name: $selected_container_name"
         echo "ID: $selected_container_id"
         echo "State: $(docker inspect --format='{{.State.Status}}' "$selected_container_name")"
@@ -162,6 +163,7 @@ dgrep(){
         echo "IP Address: $ip_address"
         echo "Ports: $ports"
         echo ""
+        } | bat  --language=sh
     done
 }
 
@@ -565,7 +567,7 @@ dlog(){
             echo "Running command on selected container: $selected_container_name"
             
             # Run the command on the selected container
-        docker logs "$selected_container_name"
+        docker logs "$selected_container_name" | bat  --language=sh
         else
             echo "Invalid selection. Please enter a valid number."
             return 1
@@ -631,7 +633,7 @@ dinspect(){
             echo "Running command on selected container: $selected_container_name"
             
             # Run the command on the selected container
-        docker inspect "$selected_container_name"
+        docker inspect "$selected_container_name" | bat  --language=sh
         else
             echo "Invalid selection. Please enter a valid number."
             return 1
