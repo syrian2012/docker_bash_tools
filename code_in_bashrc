@@ -1,12 +1,12 @@
 
 #List dockers original way with less
-alias dps='docker ps | less'
+alias dps='docker ps | bat --language=sh'
 
 #Delete docker image
 alias drmi='docker rmi'
 
 #List docker images
-alias dimgs='docker images'
+alias dimgs='docker images | bat --language=sh'
 
 #Build docker image
 alias db='docker build .'
@@ -27,7 +27,7 @@ alias dcstop='docker compose stop'
 alias dcrestart='docker compose restart'
 
 #List compose stack with less
-alias dcps='docker compose ps | less'
+alias dcps='docker compose ps | bat --language=sh'
 
 #Pull compose stack images
 alias dcpull='docker compose pull'
