@@ -3,8 +3,9 @@ add more tools to your bash make docker easier and faster.
 In version 2, you can now select from multiple containers that share the same characters in their names.
 
 ## how it works
-simply edit your .bashrc file inside your home directory and copy content of code to add in .bashrc file inside it or simply run the follwing it will do the job for you:<br>
-cat code_in_bashrc >> ~/.bashrc
+simply add "source ~/.docker_tools" inside your .bashrc file in your home directory and copy content of code to new file named .docker_tools in same location or simply run the follwing this will do the job for you:<br>
+cat code_in_bashrc > ~/.docker_tools
+echo "source ~/.docker_tools" >> .bashrc
 
 to take function you need to logout and login again or start a new shell
 
