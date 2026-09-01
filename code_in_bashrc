@@ -1,12 +1,12 @@
 
 #List dockers original way with less
-alias dps='docker ps | bat --language=sh'
+alias dps='docker ps | batcat --language=sh'
 
 #Delete docker image
 alias drmi='docker rmi'
 
 #List docker images
-alias dimgs='docker images | bat --language=sh'
+alias dimgs='docker images | batcat --language=sh'
 
 #Build docker image
 alias db='docker build .'
@@ -27,7 +27,7 @@ alias dcstop='docker compose stop'
 alias dcrestart='docker compose restart'
 
 #List compose stack with less
-alias dcps='docker compose ps | bat --language=sh'
+alias dcps='docker compose ps | batcat --language=sh'
 
 #Pull compose stack images
 alias dcpull='docker compose pull'
@@ -86,7 +86,7 @@ dinfo(){
         echo "Creation Duration: $(printf '%02dh:%02dm:%02ds' $((creation_duration/3600)) $((creation_duration%3600/60)) $((creation_duration%60)))"
         echo "IP Address: $ip_address"
         echo "Ports: $ports"
-        } | bat  --language=sh
+        } | batcat  --language=sh
     }
 
     # Check if there is only one matching container
@@ -163,7 +163,7 @@ dgrep(){
         echo "IP Address: $ip_address"
         echo "Ports: $ports"
         echo ""
-        } | bat  --language=sh
+        } | batcat  --language=sh
     done
 }
 
@@ -567,7 +567,7 @@ dlog(){
             echo "Running command on selected container: $selected_container_name"
             
             # Run the command on the selected container
-        docker logs "$selected_container_name" | bat  --language=sh
+        docker logs "$selected_container_name" | batcat  --language=sh
         else
             echo "Invalid selection. Please enter a valid number."
             return 1
@@ -633,7 +633,7 @@ dinspect(){
             echo "Running command on selected container: $selected_container_name"
             
             # Run the command on the selected container
-        docker inspect "$selected_container_name" | bat  --language=sh
+        docker inspect "$selected_container_name" | batcat  --language=sh
         else
             echo "Invalid selection. Please enter a valid number."
             return 1
