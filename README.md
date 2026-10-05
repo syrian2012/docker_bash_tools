@@ -1,98 +1,146 @@
 # docker_bash_tools
-add more tools to your bash make docker easier and faster.
-In version 2, you can now select from multiple containers that share the same characters in their names.
 
-## how it works
-simply add "source ~/.docker_tools" inside your .bashrc file in your home directory and copy content of code to new file named .docker_tools in same location or simply run the follwing this will do the job for you:<br>
-cat code_in_bashrc > ~/.docker_tools
-echo "source ~/.docker_tools" >> .bashrc
+A small set of bash helpers that make Docker and Docker Compose easier to use from your terminal.
 
-to take function you need to logout and login again or start a new shell
+This version adds an interactive container picker, fuzzy selection with fzf when available, colorized output, and improved helper commands for inspecting, logging, and managing containers.
 
-don't forget to add your user as a docker admin to avoid problems with running the tools
+## Requirements
 
-don't forget to install bat if you hav'nt already
+- Bash 4+
+- GNU date
+- Docker installed and configured
+- Optional: fzf for interactive fuzzy selection
+- Optional: bat for nicer syntax-highlighted output when inspecting JSON or shell output
 
-her what should it function
+## Installation
 
-#### dps:
-List dockers original way with less
+From this repository directory:
 
-#### drmi:
-Delete docker image/s
+```bash
+install -m 644 code_in_bashrc ~/.docker_tools
+grep -qxF 'source ~/.docker_tools' ~/.bashrc || echo 'source ~/.docker_tools' >> ~/.bashrc
+source ~/.bashrc
+```
 
-#### dimgs:
-List docker images
+Then log out and log back in, or open a new shell.
 
-#### db:
-Build docker image
+If Docker access is restricted, make sure your user is added to the docker group:
 
-#### dcup:
-Create docker compose stack
+```bash
+sudo usermod -aG docker $USER
+```
 
-#### dcdown:
-Delete docker compose stack
+## How it works
 
-#### dcstart:
-Start docker compose stack
+Every container-based command supports three styles:
 
-#### dcstop:
-Stop docker compose stack
+- `dstop` -> opens an interactive picker
+- `dstop web` -> filters by name and shows a matching menu
+- `dstop web-1` -> uses the exact container name directly
 
-#### dcrestart:
-Restart docker compose stack
+If `fzf` is installed, the picker becomes a fuzzy, searchable menu. If not, it falls back to a numbered list.
 
-#### dcps:
-List docker compose stack with less
+Colors are enabled automatically in a terminal. You can disable them with:
 
-#### dcpull:
-Pull docker compose stack images
+```bash
+NO_COLOR=1
+# or
+DTOOLS_COLOR=0
+```
 
-#### dcbuild:
-Build docker compose stack images
+You can also disable the preview pane in the fzf picker:
 
-#### dinfo container_name:
-Get container information
+```bash
+DTOOLS_PREVIEW=0
+```
 
-#### dgrep container_name:
-Get all matching containers information
+## Main commands
 
-#### dbash container_name:
-bash into container
+### Docker container listing
 
-#### dsh container_name:
-sh into container
+- `dps` - list running containers in a compact table
+- `dps -a` - include stopped containers
+- `dps --full` - show Docker's native output
+- `dcps` - list Docker Compose services in a compact table
+- `dcps --full` - show Compose's native output
+- `dhelp` - interactive help menu for all available commands
+- `dstats` - live CPU/memory/network stats for containers
 
-#### dex container_name:
-Execute something in container
+### Container details and searches
 
-#### dstart container_name:
-Start container
+- `dinfo [name]` - show a detailed, human-readable container dashboard
+- `dgrep [pattern]` - show matching containers with their info
+- `dgrep -t [pattern]` - compact table view
+- `dinspect [name]` - show raw `docker inspect` output with syntax highlighting
 
-#### drestart container_name:
-Restart container
+### Shell access
 
-#### dstop container_name:
-Stop container
+- `dbash [name]` - open an interactive bash shell inside a running container, falling back to sh
+- `dsh [name]` - open `/bin/sh` inside a running container
+- `dex [name] [command]` - run a command inside a container
 
-#### drm container_name:
-Remove container
+### Lifecycle management
 
-#### dsrm container_name:
-Stop and remove container
+- `dstart [name]` - start a container
+- `drestart [name]` - restart a container
+- `dstop [name]` - stop a running container
+- `drm [name]` - remove a container (asks for confirmation)
+- `dsrm [name]` - stop and remove a container (asks for confirmation)
 
-#### dlog container_name:
-Get logs of container
+### Logs
 
-#### dlogc container_name:
-Clear the logs of container
+- `dlog [name]` - view logs, defaulting to the last 200 lines
+- `dlog web -f` - follow logs
+- `dlog web --tail 500` - show custom tail length
+- `dlogc [name]` - clear a container's log file
 
-#### dinspect container_name:
-Inspect container
+### Docker and Compose shortcuts
 
-after that logout and login again to your shell and all of the above will be functional
+- `dimgs` - `docker images`
+- `drmi` - `docker rmi`
+- `db` - `docker build .`
+- `dcup` - `docker compose up -d`
+- `dcdown` - `docker compose down`
+- `dcstart` - `docker compose start`
+- `dcstop` - `docker compose stop`
+- `dcrestart` - `docker compose restart`
+- `dcpull` - `docker compose pull`
+- `dcbuild` - `docker compose build`
+
+## Examples
+
+```bash
+dps
+
+dps -a
+
+dinfo web
+
+dinfo web-1
+
+dgrep web
+
+dbash web
+
+dex web ls -la /etc
+
+dlog web --tail 100
+
+# live stats, all containers
+dstats
+
+# live stats for containers matching 'api'
+dstats api
+```
+
+## Notes
+
+- `dhelp` is the easiest way to discover the toolset.
+- `dps` and `dcps` automatically page output with `less` for easier reading.
+- The scripts are intentionally designed to work well with both regular Docker containers and Compose services.
 
 ## Contact
+
 For professional DevOps services, optimization, and consultation, contact me at mhd4.hz@gmail.com.
 
-### enjoy with Love Mohammad Haidar.
+### Enjoy with love, Mohammad Haidar.
