@@ -315,12 +315,12 @@ dcps() {
 # Container information
 # ---------------------------------------------------------------------------
 
-# Optional bat viewer for finite, human-readable output.
-# Falls back to normal output when bat is not installed.
+# Optional batcat viewer for finite, human-readable output.
+# Falls back to normal output when batcat is not installed.
 _dbat() {
   local lang=${1:-text}
-  if command -v bat >/dev/null 2>&1; then
-    bat --style=plain --paging=auto --language="$lang"
+  if command -v batcat >/dev/null 2>&1; then
+    batcat --style=plain --paging=auto --language="$lang"
   else
     cat
   fi
@@ -611,7 +611,7 @@ EOF
             ;;
             dinspect) cat <<'EOF'
   dinspect [name]
-    Show the raw 'docker inspect' JSON output with syntax highlighting (via bat).
+    Show the raw 'docker inspect' JSON output with syntax highlighting (via batcat).
     Usage:
       dinspect       Interactive picker.
       dinspect web   Inspect container "web".

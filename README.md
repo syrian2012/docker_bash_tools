@@ -10,7 +10,7 @@ This version adds an interactive container picker, fuzzy selection with fzf when
 - GNU date
 - Docker installed and configured
 - Optional: fzf for interactive fuzzy selection
-- Optional: bat for nicer syntax-highlighted output when inspecting JSON or shell output
+- Optional: batcat for nicer syntax-highlighted output when inspecting JSON or shell output
 
 ## Installation
 
